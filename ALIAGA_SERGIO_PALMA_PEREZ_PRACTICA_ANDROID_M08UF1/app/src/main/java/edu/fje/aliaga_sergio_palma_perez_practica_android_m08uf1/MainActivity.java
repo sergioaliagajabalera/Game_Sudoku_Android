@@ -69,10 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private void game() {
         changetoActivity(GameMenu.class);
     }
-    private void ayuda() {
-        Snackbar.make(coordinatorLayout, "No disponible", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
-    }
+    private void ayuda() { changetoActivity(HelpWebView.class);; }
 
     private void animationlogo(ImageView imglogo){
         Animation animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
