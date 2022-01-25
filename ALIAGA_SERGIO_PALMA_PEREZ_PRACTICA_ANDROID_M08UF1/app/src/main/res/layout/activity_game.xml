@@ -5,7 +5,7 @@
     android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HelpWebView">
+    tools:context=".Game">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -22,16 +22,11 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/menu_contingut" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="40dp"
-        tools:context=".HelpWebView">
+    <TextView
+        android:id="@+id/level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        />
 
-        <WebView
-            android:id="@+id/help_wv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-    </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

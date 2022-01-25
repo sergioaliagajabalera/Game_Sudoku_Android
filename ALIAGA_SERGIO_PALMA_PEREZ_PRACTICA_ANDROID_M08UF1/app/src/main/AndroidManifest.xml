@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UF1Material">
         <activity
+            android:name=".Game"
+            android:exported="true" />
+        <activity
             android:name=".HelpWebView"
             android:exported="true" />
         <activity
