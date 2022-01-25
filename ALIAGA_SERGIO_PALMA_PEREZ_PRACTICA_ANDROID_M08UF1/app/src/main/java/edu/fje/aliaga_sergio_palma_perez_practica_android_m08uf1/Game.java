@@ -4,20 +4,27 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 public class Game extends AppCompatActivity {
-
+    private LinearLayout linearLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        LinearLayout linearLayout= findViewById(R.id.layo_listsudoku);
+
         Intent intent = getIntent();
         Integer[][][][] sudoku = (Integer[][][][])getIntent().getSerializableExtra(GameMenu.MISSATGE_CLAU);
-        TextView textView = findViewById(R.id.level);
-        textView.setTextSize(200);
-        textView.setText(""+sudoku);
+
     }
 
+    public void createSudoku(Integer[][][][] sudoku){
+
+        //linearLayout.addView();
+
+    }
 }

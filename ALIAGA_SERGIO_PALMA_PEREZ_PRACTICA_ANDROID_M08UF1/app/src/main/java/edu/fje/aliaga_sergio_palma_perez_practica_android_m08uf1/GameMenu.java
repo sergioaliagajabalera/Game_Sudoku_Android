@@ -32,7 +32,7 @@ public class GameMenu extends AppCompatActivity implements View.OnClickListener 
             ImageView imageView = new ImageView(this);
             imageView.setImageResource(R.mipmap.ic_sudokulogo_foreground);
             imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-            imageView.setId(i+1);
+            imageView.setId(i);
             imageView.setOnClickListener(this);
 
             LinearLayout linearLayout = findViewById(R.id.layo_listsudoku);

@@ -22,11 +22,13 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/menu_contingut" />
-    <TextView
-        android:id="@+id/level"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/sudoku"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        />
+        android:layout_width="wrap_content"
+        android:layout_marginLeft="2dp"
+        android:orientation="horizontal"
+        android:layout_gravity="right">
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
