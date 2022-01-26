@@ -2,6 +2,7 @@ package edu.fje.aliaga_sergio_palma_perez_practica_android_m08uf1;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,7 @@ public class ScoreAdapter extends CursorAdapter {
         TextView playerName = (TextView) view.findViewById(R.id.playerName);
         TextView points = (TextView) view.findViewById(R.id.score);
 
-        String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+        String name = cursor.getString(cursor.getColumnIndexOrThrow("playerName"));
         int score = cursor.getInt(cursor.getColumnIndexOrThrow("score"));
 
         playerName.setText(name);

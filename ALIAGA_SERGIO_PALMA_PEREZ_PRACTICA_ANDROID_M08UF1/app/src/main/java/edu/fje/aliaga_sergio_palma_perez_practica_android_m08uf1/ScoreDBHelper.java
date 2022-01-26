@@ -45,6 +45,10 @@ public class ScoreDBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(DROP_SCORE_TABLE);
         onCreate(db);
+        /*db.execSQL("INSERT INTO "
+                + "score"
+                + " (playerName, points)"
+                + " VALUES ('marc', 22);");*/
     }
 
     public void insertScore(Score s) {
