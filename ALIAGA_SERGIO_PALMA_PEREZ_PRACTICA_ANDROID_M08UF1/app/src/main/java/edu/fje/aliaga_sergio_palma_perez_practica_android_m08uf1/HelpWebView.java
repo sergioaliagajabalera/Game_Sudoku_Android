@@ -3,6 +3,7 @@ package edu.fje.aliaga_sergio_palma_perez_practica_android_m08uf1;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.InputType;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;

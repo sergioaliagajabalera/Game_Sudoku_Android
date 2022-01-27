@@ -4,10 +4,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Paint;
+import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
+import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.text.InputType;
 import android.view.Gravity;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -34,8 +44,13 @@ public class Game extends AppCompatActivity {
                 tr = new TableRow(this);
                 for(int c=0; c<3; c++){
                     for(int d=0; d<3; d++){
-                        TextView tx = generateTxTable();
-                        tx.setText(""+sudoku[a][c][b][d]);
+                        EditText tx = generateTxTable();
+                        if(sudoku[a][c][b][d]!=null){
+                            tx.setText(""+sudoku[a][c][b][d]);
+                            tx.setEnabled(false);
+                        }
+                        tx.setTag(a+""+c+""+b+""+c);
+
                         tr.addView(tx);
                     }
                 }
@@ -44,17 +59,29 @@ public class Game extends AppCompatActivity {
         }
     }
 
-    private TextView generateTxTable(){
-        TextView tx= new TextView(this);
+    private EditText generateTxTable(){
 
-        /*LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.setMargins(10,10,10,10);
-        tx.setLayoutParams(params);
-*/
-        tx.setBackgroundColor(Color.parseColor("#ffffff"));
+        EditText tx= new EditText(this);
+        tx.setInputType(InputType.TYPE_CLASS_PHONE);
+
+        // Create a border programmatically
+        ShapeDrawable shape = shapestrokepersonal(3);
+        // Assign the created border to EditText widget
+        tx.setBackground(shape);
+        //tx.setBackgroundColor(Color.parseColor("#ffffff"));
         tx.setPadding(20,20,20,20);
         tx.setTextSize(20);
         tx.setGravity(Gravity.CENTER);
         return tx;
     }
+
+    private ShapeDrawable shapestrokepersonal(int stroke){
+
+        ShapeDrawable shape = new ShapeDrawable(new RectShape());
+        shape.getPaint().setColor(Color.BLACK);
+        shape.getPaint().setStyle(Paint.Style.STROKE);
+        shape.getPaint().setStrokeWidth(stroke);
+        return shape;
+    }
 }
+
