@@ -2,39 +2,48 @@ package edu.fje.aliaga_sergio_palma_perez_practica_android_m08uf1;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.LinearGradient;
 import android.graphics.Paint;
-import android.graphics.Shader;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
+import android.icu.text.CaseMap;
 import android.os.Bundle;
-import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.os.TestLooperManager;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.Gravity;
-import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.lang.Math;
+import java.util.Arrays;
+
 public class Game extends AppCompatActivity {
     private TableLayout tablelayout;
+    protected Integer[][][][] sudoku;
+    protected Integer[][][][] sudokugame=new Integer[3][3][3][3];
+    protected TextView titletext;
+    protected int positionsempty=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-
+        titletext=findViewById(R.id.title);
         tablelayout= findViewById(R.id.table_listsudoku);
 
         Intent intent = getIntent();
-        Integer[][][][] sudoku = (Integer[][][][])getIntent().getSerializableExtra(GameMenu.MISSATGE_CLAU);
-        createSudoku(sudoku);
+        this.sudoku = (Integer[][][][])getIntent().getSerializableExtra(GameMenu.MISSATGE_CLAU);
+        copysudoku();
+        DeletePositions(20);
+        positionsempty=20;
+        createSudoku(this.sudokugame);
+
     }
 
     private void createSudoku(Integer[][][][] sudoku) {
@@ -47,10 +56,12 @@ public class Game extends AppCompatActivity {
                         EditText tx = generateTxTable();
                         if(sudoku[a][c][b][d]!=null){
                             tx.setText(""+sudoku[a][c][b][d]);
+                            tx.setBackground(Gradientpersonal(3, Color.GRAY,Color.BLACK));
                             tx.setEnabled(false);
+                            tx.setTextColor(Color.BLACK);
                         }
-                        tx.setTag(a+""+c+""+b+""+c);
-
+                        tx.setTag(a+""+c+""+b+""+d);
+                        tx.addTextChangedListener(new CellWatcher(this,tx));
                         tr.addView(tx);
                     }
                 }
@@ -62,10 +73,9 @@ public class Game extends AppCompatActivity {
     private EditText generateTxTable(){
 
         EditText tx= new EditText(this);
-        tx.setInputType(InputType.TYPE_CLASS_PHONE);
-
+        tx.setInputType(InputType.TYPE_CLASS_NUMBER);
         // Create a border programmatically
-        ShapeDrawable shape = shapestrokepersonal(3);
+        GradientDrawable shape = Gradientpersonal(3, Color.WHITE,Color.BLACK);
         // Assign the created border to EditText widget
         tx.setBackground(shape);
         //tx.setBackgroundColor(Color.parseColor("#ffffff"));
@@ -75,13 +85,36 @@ public class Game extends AppCompatActivity {
         return tx;
     }
 
-    private ShapeDrawable shapestrokepersonal(int stroke){
+    protected GradientDrawable Gradientpersonal(int stroke, int color1, int color2){
+        GradientDrawable gd = new GradientDrawable();
+        gd.setColor(color1);
+        gd.setStroke(stroke, color2);
+        return gd;
+    }
 
-        ShapeDrawable shape = new ShapeDrawable(new RectShape());
-        shape.getPaint().setColor(Color.BLACK);
-        shape.getPaint().setStyle(Paint.Style.STROKE);
-        shape.getPaint().setStrokeWidth(stroke);
-        return shape;
+    private void DeletePositions(int nPositions){
+        int[] positionsacbd=new int[4];
+        int i2=0;
+        for(; i2<nPositions; i2++) {
+            for (int i = 0; i < 4; i++) positionsacbd[i] = (int) (Math.random() * 3);
+            if (this.sudokugame[positionsacbd[0]][positionsacbd[1]][positionsacbd[2]][positionsacbd[3]] != null)
+                this.sudokugame[positionsacbd[0]][positionsacbd[1]][positionsacbd[2]][positionsacbd[3]] = null;
+            else i2--;
+        }
+    }
+
+    private void copysudoku(){
+        for (int a=0; a<3; a++){
+            for (int b=0; b<3; b++) {
+                for(int c=0; c<3; c++){
+                    System.arraycopy(this.sudoku[a][b][c],0,this.sudokugame[a][b][c],0,this.sudokugame.length);
+                }
+            }
+        }
+    }
+
+    protected boolean gameisfinish(){
+        return this.positionsempty==0? true:false;
     }
 }
 
