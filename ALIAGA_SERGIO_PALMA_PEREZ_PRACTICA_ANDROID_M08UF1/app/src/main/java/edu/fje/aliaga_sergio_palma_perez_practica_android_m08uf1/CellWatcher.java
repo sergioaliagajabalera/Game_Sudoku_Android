@@ -39,10 +39,13 @@ public class CellWatcher implements TextWatcher {
                     this.game.sudokugame[cell[0]][cell[1]][cell[2]][cell[3]]=text;
                     this.game.positionsempty=this.game.positionsempty-1;
 
-                }else mEditText.setBackground(this.game.Gradientpersonal(3, Color.WHITE,Color.RED));
+                }else{
+                    mEditText.setText("");
+                    mEditText.setBackground(this.game.Gradientpersonal(3, Color.WHITE,Color.RED));
+                }
 
                 if(this.game.gameisfinish()) this.game.titletext.setText(this.game.titletext.getText()+" FINISH");
-            }
+            }else mEditText.setText("");
         }
     }
 
