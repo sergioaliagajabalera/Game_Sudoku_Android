@@ -15,10 +15,13 @@ import android.os.TestLooperManager;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.lang.Math;
 import java.util.Arrays;
@@ -56,12 +59,24 @@ public class Game extends AppCompatActivity {
                         EditText tx = generateTxTable();
                         if(sudoku[a][c][b][d]!=null){
                             tx.setText(""+sudoku[a][c][b][d]);
+                            tx.setInputType(InputType.TYPE_NULL);
                             tx.setBackground(Gradientpersonal(3, Color.GRAY,Color.BLACK));
                             tx.setEnabled(false);
                             tx.setTextColor(Color.BLACK);
                         }
                         tx.setTag(a+""+c+""+b+""+d);
                         tx.addTextChangedListener(new CellWatcher(this,tx));
+                        tx.setOnClickListener(new View.OnClickListener(){
+
+                            @Override
+                            public void onClick(View view) {
+                                int[] cell=new int[4];
+                                char[] celltag=view.getTag().toString().toCharArray();
+                                for(int b=0; b<4; b++) cell[b]=Character.getNumericValue(celltag[b]);
+                                setdefaultcolorscells();
+                                setinfocolorscells(cell);
+                            }
+                        });
                         tr.addView(tx);
                     }
                 }
@@ -71,7 +86,6 @@ public class Game extends AppCompatActivity {
     }
 
     private EditText generateTxTable(){
-
         EditText tx= new EditText(this);
         tx.setInputType(InputType.TYPE_CLASS_NUMBER);
         // Create a border programmatically
@@ -115,6 +129,38 @@ public class Game extends AppCompatActivity {
 
     protected boolean gameisfinish(){
         return this.positionsempty==0? true:false;
+    }
+
+    protected void setdefaultcolorscells(){
+        for (int a=0; a<3; a++){
+            for (int b=0; b<3; b++) {
+                for(int c=0; c<3; c++){
+                    for(int d=0; d<3; d++){
+                        EditText tx=(EditText) tablelayout.findViewWithTag(a+""+c+""+b+""+d);
+                        if(sudokugame[a][c][b][d]!=null){
+                            tx.setBackground(Gradientpersonal(3, Color.GRAY,Color.BLACK));
+                        }else{
+                            tx.setBackground(Gradientpersonal(3, Color.WHITE,Color.BLACK));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void setinfocolorscells(int[] cells){
+        for (int a=0; a<3; a++){
+            for (int b=0; b<3; b++) {
+                for(int c=0; c<3; c++){
+                    for(int d=0; d<3; d++){
+                        EditText tx=(EditText) tablelayout.findViewWithTag(a+""+c+""+b+""+d);
+                        if(a==cells[0] && c==cells[1] || c==cells[1] && d==cells[3] || a==cells[0] && b==cells[2]){
+                            tx.setBackground(Gradientpersonal(3, Color.YELLOW,Color.BLACK));
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
