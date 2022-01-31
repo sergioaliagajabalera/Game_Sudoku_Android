@@ -19,7 +19,8 @@ public class ScoreDBHelper extends SQLiteOpenHelper {
     private static final String CREATE_SCORE_TABLE = "CREATE TABLE "
             + ScoreDB.ScoreTable.TABLE_NAME + " ("
             + ScoreDB.ScoreTable._ID + " INTEGER PRIMARY KEY,"
-            + ScoreDB.ScoreTable.PLAYER_NAME + " TEXT,"
+            + ScoreDB.ScoreTable.TIME + " INTEGER,"
+            + ScoreDB.ScoreTable.LEVEL + " INTEGER,"
             + ScoreDB.ScoreTable.POINTS + " INTEGER )";
 
     public static final String DROP_SCORE_TABLE = "DROP TABLE IF EXISTS "
@@ -57,8 +58,9 @@ public class ScoreDBHelper extends SQLiteOpenHelper {
         db.beginTransaction();
         try {
             ContentValues values = new ContentValues();
-            values.put(ScoreDB.ScoreTable.PLAYER_NAME, Score.playerName);
+            values.put(ScoreDB.ScoreTable.TIME, Score.time);
             values.put(ScoreDB.ScoreTable.POINTS, Score.points);
+            values.put(ScoreDB.ScoreTable.LEVEL, Score.level);
 
             db.insertOrThrow(ScoreDB.ScoreTable.TABLE_NAME, null, values);
             db.setTransactionSuccessful();

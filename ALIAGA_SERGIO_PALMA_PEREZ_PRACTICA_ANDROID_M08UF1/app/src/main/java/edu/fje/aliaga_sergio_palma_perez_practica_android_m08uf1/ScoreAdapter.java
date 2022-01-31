@@ -22,13 +22,16 @@ public class ScoreAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context ctx, Cursor cursor) {
-        TextView playerName = (TextView) view.findViewById(R.id.playerName);
+        TextView time = (TextView) view.findViewById(R.id.time);
         TextView points = (TextView) view.findViewById(R.id.score);
+        TextView levels = (TextView) view.findViewById(R.id.level);
 
-        String name = cursor.getString(cursor.getColumnIndexOrThrow("playerName"));
+        int duration = cursor.getInt(cursor.getColumnIndexOrThrow("time"));
         int score = cursor.getInt(cursor.getColumnIndexOrThrow("score"));
+        int level = cursor.getInt(cursor.getColumnIndexOrThrow("level"));
 
-        playerName.setText(name);
+        time.setText(String.valueOf(duration));
         points.setText(String.valueOf(score));
+        levels.setText(String.valueOf(level));
     }
 }
