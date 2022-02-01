@@ -27,8 +27,8 @@ public class ScoreAdapter extends CursorAdapter {
         TextView levels = (TextView) view.findViewById(R.id.level);
 
         int duration = cursor.getInt(cursor.getColumnIndexOrThrow("time"));
-        int score = cursor.getInt(cursor.getColumnIndexOrThrow("score"));
-        int level = cursor.getInt(cursor.getColumnIndexOrThrow("level"));
+        long score = cursor.getInt(cursor.getColumnIndexOrThrow("points"));
+        long level = cursor.getInt(cursor.getColumnIndexOrThrow("level"));
 
         time.setText(String.valueOf(duration));
         points.setText(String.valueOf(score));

@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         //Cursor to take data from db (3 highest)
         Cursor scoreCursor = db.rawQuery("SELECT * FROM score ORDER BY points DESC LIMIT 3", null);
 
+        System.out.println(scoreCursor);
         //Creating listview to show scores and connect the adapter with it.
         ListView scoresLv = findViewById(R.id.scoreLv);
         scoresAdapter = new ScoreAdapter(this,scoreCursor);

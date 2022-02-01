@@ -1,17 +1,27 @@
 package edu.fje.aliaga_sergio_palma_perez_practica_android_m08uf1;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.icu.text.CaseMap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.TestLooperManager;
+import android.provider.CalendarContract;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -20,11 +30,17 @@ import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
 import java.lang.Math;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class Game extends AppCompatActivity {
     private TableLayout tablelayout;
@@ -32,13 +48,52 @@ public class Game extends AppCompatActivity {
     protected Integer[][][][] sudokugame=new Integer[3][3][3][3];
     protected TextView titletext;
     protected int positionsempty=0;
+    protected static long gameStartTime;
+    protected long score;
+
+    private ScoreDBHelper scoreDBUtil;
+
+    private ContentResolver contentResolver;
+    private Set<String> calendars = new HashSet<String>();
+    private List<String> events = new ArrayList<String>();
+    private static final int PERMISSIONS_REQUEST_READ_CALENDARS = 100;
+    private static final int PERMISSIONS_REQUEST_WRITE_CALENDARS = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        gameStartTime = System.currentTimeMillis();
         setContentView(R.layout.activity_game);
         titletext=findViewById(R.id.title);
         tablelayout= findViewById(R.id.table_listsudoku);
+
+        //Calendar
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_CALENDAR)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_CALENDAR)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_CALENDAR},
+                        PERMISSIONS_REQUEST_READ_CALENDARS);
+            }
+        }
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_CALENDAR)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_CALENDAR)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_CALENDAR},
+                        PERMISSIONS_REQUEST_WRITE_CALENDARS);
+            }
+        }
+
+        contentResolver = getContentResolver();
+
+        scoreDBUtil = ScoreDBHelper.getInstance(this);
 
         Intent intent = getIntent();
         this.sudoku = (Integer[][][][])getIntent().getSerializableExtra(GameMenu.MISSATGE_CLAU);
@@ -125,6 +180,55 @@ public class Game extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    protected void GetSaveScore() {
+        long finalGameTime = System.currentTimeMillis();
+        score = 2500 - (finalGameTime - gameStartTime) / 100;
+
+        Score sc = new Score();
+        sc.time = (finalGameTime - gameStartTime) / 100;
+        sc.points = (int) score;
+        System.out.print("Score: " + score);
+        scoreDBUtil.insertScore(sc);
+        addEvent();
+    }
+
+    protected void addEvent() {
+        ContentValues event = new ContentValues();
+        event.put(CalendarContract.Events.CALENDAR_ID, 1);
+        event.put(CalendarContract.Events.TITLE, "Ets el guanyador del sudoku amb una puntuació de " + score);
+        event.put(CalendarContract.Events.DTSTART, Calendar.getInstance().getTimeInMillis());
+        event.put(CalendarContract.Events.DTEND, Calendar.getInstance().getTimeInMillis());
+        event.put(CalendarContract.Events.EVENT_TIMEZONE, "Europe/Madrid");
+        Uri uri = contentResolver.insert(CalendarContract.Events.CONTENT_URI, event);
+
+        int id = Integer.parseInt(uri.getLastPathSegment());
+        Toast.makeText(getApplicationContext(), "Puntuació afegida al calendari!",
+                Toast.LENGTH_SHORT).show();
+        getCalendars();
+    }
+
+    protected void getCalendars() {
+        Uri uri = CalendarContract.Calendars.CONTENT_URI;
+        String[] projection = {
+                CalendarContract.Calendars.NAME,
+                CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
+                CalendarContract.Calendars.CALENDAR_COLOR,
+                CalendarContract.Calendars.VISIBLE
+        };
+        Cursor cursor = contentResolver.query(uri, projection, null, null, null);
+        try {
+            if(cursor.getCount() > 0) {
+                while(cursor.moveToNext()) {
+                    String hideName = cursor.getString(0);
+                    String visibleName = cursor.getString(1);
+                    @SuppressLint("Range") String color = cursor.getString(cursor.getColumnIndex(CalendarContract.Calendars.CALENDAR_COLOR));
+                    Boolean selected = !cursor.getString(3).equals("0");
+                    calendars.add(visibleName);
+                }
+            }
+        } catch (AssertionError ex) {}
     }
 
     protected boolean gameisfinish(){

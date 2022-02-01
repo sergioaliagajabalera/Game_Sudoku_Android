@@ -10,5 +10,6 @@ public class ScoreDB {
         static final String TIME = "time";
         static final String POINTS = "points";
         static final String LEVEL = "level";
+        static final String COLUMNA_NULL = "null";
     }
 }

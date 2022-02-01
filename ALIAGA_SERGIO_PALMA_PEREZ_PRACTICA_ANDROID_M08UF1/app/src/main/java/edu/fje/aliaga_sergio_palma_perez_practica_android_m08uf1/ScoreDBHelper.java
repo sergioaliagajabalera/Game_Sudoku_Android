@@ -40,16 +40,25 @@ public class ScoreDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_SCORE_TABLE);
+
+        ContentValues sc = new ContentValues();
+        sc.put(ScoreDB.ScoreTable.POINTS, 500);
+        sc.put(ScoreDB.ScoreTable.LEVEL, 1);
+        sc.put(ScoreDB.ScoreTable.TIME, 300);
+
+        db.insert(ScoreDB.ScoreTable.TABLE_NAME, null, sc);
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(DROP_SCORE_TABLE);
         onCreate(db);
-        /*db.execSQL("INSERT INTO "
-                + "score"
-                + " (playerName, points)"
-                + " VALUES ('marc', 22);");*/
+    }
+
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        super.onDowngrade(db, oldVersion, newVersion);
     }
 
     public void insertScore(Score s) {
@@ -58,9 +67,9 @@ public class ScoreDBHelper extends SQLiteOpenHelper {
         db.beginTransaction();
         try {
             ContentValues values = new ContentValues();
-            values.put(ScoreDB.ScoreTable.TIME, Score.time);
-            values.put(ScoreDB.ScoreTable.POINTS, Score.points);
-            values.put(ScoreDB.ScoreTable.LEVEL, Score.level);
+            values.put(ScoreDB.ScoreTable.TIME, s.time);
+            values.put(ScoreDB.ScoreTable.POINTS, s.points);
+            values.put(ScoreDB.ScoreTable.LEVEL, s.level);
 
             db.insertOrThrow(ScoreDB.ScoreTable.TABLE_NAME, null, values);
             db.setTransactionSuccessful();

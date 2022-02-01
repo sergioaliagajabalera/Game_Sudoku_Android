@@ -43,8 +43,10 @@ public class CellWatcher implements TextWatcher {
                     mEditText.setText("");
                     mEditText.setBackground(this.game.Gradientpersonal(3, Color.WHITE, Color.RED));
                 }
-                if (this.game.gameisfinish())
+                if (this.game.gameisfinish()) {
                     this.game.titletext.setText(this.game.titletext.getText() + " FINISH");
+                    this.game.GetSaveScore();
+                }
             } else mEditText.setText("");
         }
     }
