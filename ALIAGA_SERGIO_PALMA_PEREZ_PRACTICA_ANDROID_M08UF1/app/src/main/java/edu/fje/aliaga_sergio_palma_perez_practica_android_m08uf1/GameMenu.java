@@ -47,6 +47,7 @@ public class GameMenu extends AppCompatActivity implements View.OnClickListener 
     public void onClick(View view) {
         Intent intent = new Intent(getApplicationContext(),Game.class);
         intent.putExtra(MISSATGE_CLAU, this.listsudokus[view.getId()]);
+        intent.putExtra("Level", 1+(int)view.getId());
         startActivity(intent);
     }
 
