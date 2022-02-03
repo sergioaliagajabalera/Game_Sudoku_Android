@@ -1,6 +1,8 @@
 package edu.fje.aliaga_sergio_palma_perez_practica_android_m08uf1;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -16,26 +18,48 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 
-
-/**
- * Classe que implementa un menu a la barra d'acció
- *
- * @author sergi.grau@fje.edu
- * @version 2.0, 1/10/2020, actualització a API.30
- */
 public class MainActivity extends AppCompatActivity {
 
     private CoordinatorLayout coordinatorLayout;
     private ImageView logoimage;
     ScoreAdapter scoresAdapter;
 
+    private static final int PERMISSIONS_REQUEST_READ_CALENDARS = 100;
+    private static final int PERMISSIONS_REQUEST_WRITE_CALENDARS = 200;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Calendar
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_CALENDAR)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_CALENDAR)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_CALENDAR},
+                        PERMISSIONS_REQUEST_READ_CALENDARS);
+            }
+        }
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_CALENDAR)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_CALENDAR)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_CALENDAR},
+                        PERMISSIONS_REQUEST_WRITE_CALENDARS);
+            }
+        }
 
         //Creation or access to database
         ScoreDBHelper scores = ScoreDBHelper.getInstance(this);
@@ -44,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         //Cursor to take data from db (3 highest)
         Cursor scoreCursor = db.rawQuery("SELECT * FROM score ORDER BY points DESC LIMIT 3", null);
 
-        System.out.println(scoreCursor);
         //Creating listview to show scores and connect the adapter with it.
         ListView scoresLv = findViewById(R.id.scoreLv);
         scoresAdapter = new ScoreAdapter(this,scoreCursor);

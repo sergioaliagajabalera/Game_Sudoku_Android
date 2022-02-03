@@ -1,32 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center">
 
-    <TextView
-        android:id="@+id/time"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Shepard"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#FFFFFF" />
+        android:orientation="horizontal"
+        android:layout_gravity="center">
 
-    <TextView
-        android:id="@+id/score"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:text="9999"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#F3F2F2" />
+        <TextView
+            android:id="@+id/score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="9999"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_gravity="center"/>
+        <Space
+            android:layout_width="40dp"
+            android:layout_height="match_parent"/>
 
-    <TextView
-        android:id="@+id/level"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:text="9999"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#F3F2F2" />
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="9999"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_gravity="center"/>
+        <Space
+            android:layout_width="40dp"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:id="@+id/level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="9999"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_gravity="center"/>
+    </LinearLayout>
 </LinearLayout>

@@ -24,6 +24,7 @@ import android.os.TestLooperManager;
 import android.provider.CalendarContract;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
@@ -56,8 +57,6 @@ public class Game extends AppCompatActivity {
     private ContentResolver contentResolver;
     private Set<String> calendars = new HashSet<String>();
     private List<String> events = new ArrayList<String>();
-    private static final int PERMISSIONS_REQUEST_READ_CALENDARS = 100;
-    private static final int PERMISSIONS_REQUEST_WRITE_CALENDARS = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,30 +65,6 @@ public class Game extends AppCompatActivity {
         setContentView(R.layout.activity_game);
         titletext=findViewById(R.id.title);
         tablelayout= findViewById(R.id.table_listsudoku);
-
-        //Calendar
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_CALENDAR)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.READ_CALENDAR)) {
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_CALENDAR},
-                        PERMISSIONS_REQUEST_READ_CALENDARS);
-            }
-        }
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_CALENDAR)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.WRITE_CALENDAR)) {
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_CALENDAR},
-                        PERMISSIONS_REQUEST_WRITE_CALENDARS);
-            }
-        }
 
         contentResolver = getContentResolver();
 
@@ -182,7 +157,7 @@ public class Game extends AppCompatActivity {
         }
     }
 
-    protected void GetSaveScore() {
+    public void GetSaveScore() {
         long finalGameTime = System.currentTimeMillis();
         score = 2500 - (finalGameTime - gameStartTime) / 100;
 
@@ -192,9 +167,12 @@ public class Game extends AppCompatActivity {
         System.out.print("Score: " + score);
         scoreDBUtil.insertScore(sc);
         addEvent();
+        obtenirEvents();
+        Log.i(getClass().getName(), calendars.toString());
+        Log.i(getClass().getName(), events.toString());
     }
 
-    protected void addEvent() {
+    private void addEvent() {
         ContentValues event = new ContentValues();
         event.put(CalendarContract.Events.CALENDAR_ID, 1);
         event.put(CalendarContract.Events.TITLE, "Ets el guanyador del sudoku amb una puntuació de " + score);
@@ -204,12 +182,12 @@ public class Game extends AppCompatActivity {
         Uri uri = contentResolver.insert(CalendarContract.Events.CONTENT_URI, event);
 
         int id = Integer.parseInt(uri.getLastPathSegment());
-        Toast.makeText(getApplicationContext(), "Puntuació afegida al calendari!",
+        Toast.makeText(getApplicationContext(), "Puntuació afegida al calendari amb id" + id,
                 Toast.LENGTH_SHORT).show();
         getCalendars();
     }
 
-    protected void getCalendars() {
+    private void getCalendars() {
         Uri uri = CalendarContract.Calendars.CONTENT_URI;
         String[] projection = {
                 CalendarContract.Calendars.NAME,
@@ -223,8 +201,9 @@ public class Game extends AppCompatActivity {
                 while(cursor.moveToNext()) {
                     String hideName = cursor.getString(0);
                     String visibleName = cursor.getString(1);
-                    @SuppressLint("Range") String color = cursor.getString(cursor.getColumnIndex(CalendarContract.Calendars.CALENDAR_COLOR));
+                    String color = cursor.getString(cursor.getColumnIndexOrThrow(CalendarContract.Calendars.CALENDAR_COLOR));
                     Boolean selected = !cursor.getString(3).equals("0");
+                    System.out.println("hola  " + visibleName);
                     calendars.add(visibleName);
                 }
             }
@@ -264,6 +243,23 @@ public class Game extends AppCompatActivity {
                     }
                 }
             }
+        }
+    }
+
+    private void obtenirEvents() {
+        Uri uri = CalendarContract.Events.CONTENT_URI;
+        String seleccio = String.format("(%s = ?)", CalendarContract.Events.TITLE);
+        String[] seleccioArgs = new String[]{"DAM2 Escola del Clot"};
+        String[] projeccio = new String[]{
+                CalendarContract.Events._ID,
+                CalendarContract.Events.TITLE,
+                CalendarContract.Events.DTSTART
+        };
+        Cursor cursor = contentResolver.query(uri, projeccio, seleccio, seleccioArgs, null);
+        while (cursor.moveToNext()) {
+            long id = cursor.getLong(0);
+            String titol = cursor.getString(1);
+            events.add(titol);
         }
     }
 }
