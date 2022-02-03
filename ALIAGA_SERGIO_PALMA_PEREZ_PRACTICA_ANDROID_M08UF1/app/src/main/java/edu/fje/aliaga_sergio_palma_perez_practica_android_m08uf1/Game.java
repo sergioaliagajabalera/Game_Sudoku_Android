@@ -51,7 +51,7 @@ public class Game extends AppCompatActivity {
     protected int positionsempty=0;
     protected static long gameStartTime;
     protected long score;
-
+    protected int level;
     private ScoreDBHelper scoreDBUtil;
 
     private ContentResolver contentResolver;
@@ -71,6 +71,8 @@ public class Game extends AppCompatActivity {
         scoreDBUtil = ScoreDBHelper.getInstance(this);
 
         Intent intent = getIntent();
+        this.level=(int) getIntent().getExtras().getInt("Level");
+        this.titletext.setText("Level: "+this.level);
         this.sudoku = (Integer[][][][])getIntent().getSerializableExtra(GameMenu.MISSATGE_CLAU);
         copysudoku();
         DeletePositions(20);
@@ -164,6 +166,7 @@ public class Game extends AppCompatActivity {
         Score sc = new Score();
         sc.time = (finalGameTime - gameStartTime) / 100;
         sc.points = (int) score;
+        sc.level=this.level;
         System.out.print("Score: " + score);
         scoreDBUtil.insertScore(sc);
         addEvent();
