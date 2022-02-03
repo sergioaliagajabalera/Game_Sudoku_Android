@@ -5,7 +5,7 @@
     android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Game">
+    tools:context=".GameMenu">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -26,20 +26,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_gravity="center" >
-    <TextView
-        android:id="@+id/title"
+        android:layout_gravity="center">
+
+    <TextView android:id="@+id/simpleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="50dp"
-        android:layout_gravity="center"/>
-    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/table_listsudoku"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="50dp"
         android:layout_gravity="center"
+        android:text="SELECCIONA"
+        android:layout_marginBottom="20dp"
+        />
+
+    <HorizontalScrollView
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
         >
-    </TableLayout>
+        <LinearLayout
+            android:id="@+id/layo_listsudoku"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:orientation="horizontal"
+            android:layout_gravity="right">
+        </LinearLayout>
+    </HorizontalScrollView>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
