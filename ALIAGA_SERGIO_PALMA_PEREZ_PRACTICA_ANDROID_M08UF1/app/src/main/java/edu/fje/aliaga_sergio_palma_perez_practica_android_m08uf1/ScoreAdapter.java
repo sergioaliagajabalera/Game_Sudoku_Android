@@ -22,14 +22,17 @@ public class ScoreAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context ctx, Cursor cursor) {
+        TextView game_date = (TextView) view.findViewById(R.id.game_date);
         TextView time = (TextView) view.findViewById(R.id.time);
         TextView points = (TextView) view.findViewById(R.id.score);
         TextView levels = (TextView) view.findViewById(R.id.level);
 
-        int duration = cursor.getInt(cursor.getColumnIndexOrThrow("time"));
+        String date_game = cursor.getString(cursor.getColumnIndexOrThrow("game_date"));
+        long duration = cursor.getInt(cursor.getColumnIndexOrThrow("time"));
         long score = cursor.getInt(cursor.getColumnIndexOrThrow("points"));
         long level = cursor.getInt(cursor.getColumnIndexOrThrow("level"));
 
+        game_date.setText(String.valueOf(date_game));
         time.setText(String.valueOf(duration));
         points.setText(String.valueOf(score));
         levels.setText(String.valueOf(level));

@@ -56,6 +56,9 @@ public class Game extends AppCompatActivity {
     protected long score;
     protected int level;
     private ScoreDBHelper scoreDBUtil;
+    protected int gameErrors = 0;
+
+    static final int EVENT_AFEGIT = 1;
 
     private ContentResolver contentResolver;
     private Set<String> calendars = new HashSet<String>();
@@ -164,25 +167,40 @@ public class Game extends AppCompatActivity {
 
     public void GetSaveScore() {
         long finalGameTime = System.currentTimeMillis();
-        score = 2500 - (finalGameTime - gameStartTime) / 100;
+        score = 5000 - this.gameErrors - (finalGameTime - gameStartTime) / 100;
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
         String formattedDate = df.format(c);
         System.out.println(formattedDate);
 
         Score sc = new Score();
-        sc.time = formattedDate;
+        sc.game_date = formattedDate;
+        sc.time = (finalGameTime - gameStartTime) / 100;
         sc.points = (int) score;
         sc.level=this.level;
         scoreDBUtil.insertScore(sc);
         addEvent();
-        obtenirEvents();
+        //obtenirEvents();
         Log.i(getClass().getName(), calendars.toString());
         Log.i(getClass().getName(), events.toString());
     }
 
     private void addEvent() {
-        ContentValues event = new ContentValues();
+        Calendar calendari = Calendar.getInstance();
+        Intent intent = new Intent(Intent.ACTION_EDIT);
+        intent.setType("vnd.android.cursor.item/event");
+        intent.putExtra("beginTime", calendari.getTimeInMillis());
+        intent.putExtra("allDay", true);
+        intent.putExtra("rrule", "FREQ=YEARLY");
+        intent.putExtra("endTime", calendari.getTimeInMillis());
+        intent.putExtra("title", "Guanyador del sudoku");
+        intent.putExtra("description", "Ets el guanyador del sudoku amb una puntuació de " + score);
+        intent.putExtra("eventLocation", "BARCELONA");
+
+        startActivityForResult(intent,EVENT_AFEGIT);
+
+
+       /* ContentValues event = new ContentValues();
         event.put(CalendarContract.Events.CALENDAR_ID, 1);
         event.put(CalendarContract.Events.TITLE, "Ets el guanyador del sudoku amb una puntuació de " + score);
         event.put(CalendarContract.Events.DTSTART, Calendar.getInstance().getTimeInMillis());
@@ -193,10 +211,21 @@ public class Game extends AppCompatActivity {
         int id = Integer.parseInt(uri.getLastPathSegment());
         Toast.makeText(getApplicationContext(), "Puntuació afegida al calendari amb id" + id,
                 Toast.LENGTH_SHORT).show();
-        getCalendars();
+        getCalendars();*/
     }
 
-    private void getCalendars() {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == EVENT_AFEGIT) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(this, "s'ha afegit un esdeveniment", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
+    }
+
+    /*private void getCalendars() {
         Uri uri = CalendarContract.Calendars.CONTENT_URI;
         String[] projection = {
                 CalendarContract.Calendars.NAME,
@@ -216,7 +245,7 @@ public class Game extends AppCompatActivity {
                 }
             }
         } catch (AssertionError ex) {}
-    }
+    }*/
 
     protected boolean gameisfinish(){
         return this.positionsempty==0? true:false;

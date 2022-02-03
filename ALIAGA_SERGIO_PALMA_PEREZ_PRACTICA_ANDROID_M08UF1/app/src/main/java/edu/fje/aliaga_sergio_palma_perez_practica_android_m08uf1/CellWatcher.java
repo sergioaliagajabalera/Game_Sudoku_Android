@@ -13,6 +13,7 @@ public class CellWatcher implements TextWatcher {
     private Game game;
     private EditText mEditText;
 
+
     public CellWatcher(Game game, EditText text){
         this.game=game;
         this.mEditText=text;
@@ -42,6 +43,7 @@ public class CellWatcher implements TextWatcher {
                 } else {
                     mEditText.setText("");
                     mEditText.setBackground(this.game.Gradientpersonal(3, Color.WHITE, Color.RED));
+                    this.game.gameErrors += 1;
                 }
                 if (this.game.gameisfinish()) {
                     this.game.titletext.setText(this.game.titletext.getText() + " FINISH");
