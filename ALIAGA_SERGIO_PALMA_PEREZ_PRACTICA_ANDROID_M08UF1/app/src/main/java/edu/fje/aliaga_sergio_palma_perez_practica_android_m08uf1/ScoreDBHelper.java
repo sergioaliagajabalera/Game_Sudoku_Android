@@ -19,7 +19,7 @@ public class ScoreDBHelper extends SQLiteOpenHelper {
     private static final String CREATE_SCORE_TABLE = "CREATE TABLE "
             + ScoreDB.ScoreTable.TABLE_NAME + " ("
             + ScoreDB.ScoreTable._ID + " INTEGER PRIMARY KEY,"
-            + ScoreDB.ScoreTable.TIME + " INTEGER,"
+            + ScoreDB.ScoreTable.TIME + " TEXT,"
             + ScoreDB.ScoreTable.LEVEL + " INTEGER,"
             + ScoreDB.ScoreTable.POINTS + " INTEGER )";
 

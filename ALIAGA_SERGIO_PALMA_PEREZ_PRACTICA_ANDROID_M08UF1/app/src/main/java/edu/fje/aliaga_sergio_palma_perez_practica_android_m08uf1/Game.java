@@ -18,6 +18,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.icu.text.CaseMap;
+import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.TestLooperManager;
@@ -39,8 +40,10 @@ import java.lang.Math;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class Game extends AppCompatActivity {
@@ -162,12 +165,15 @@ public class Game extends AppCompatActivity {
     public void GetSaveScore() {
         long finalGameTime = System.currentTimeMillis();
         score = 2500 - (finalGameTime - gameStartTime) / 100;
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
+        String formattedDate = df.format(c);
+        System.out.println(formattedDate);
 
         Score sc = new Score();
-        sc.time = (finalGameTime - gameStartTime) / 100;
+        sc.time = formattedDate;
         sc.points = (int) score;
         sc.level=this.level;
-        System.out.print("Score: " + score);
         scoreDBUtil.insertScore(sc);
         addEvent();
         obtenirEvents();
