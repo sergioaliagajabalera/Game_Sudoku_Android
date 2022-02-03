@@ -40,14 +40,6 @@ public class ScoreDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_SCORE_TABLE);
-
-        ContentValues sc = new ContentValues();
-        sc.put(ScoreDB.ScoreTable.POINTS, 500);
-        sc.put(ScoreDB.ScoreTable.LEVEL, 1);
-        sc.put(ScoreDB.ScoreTable.TIME, 300);
-
-        db.insert(ScoreDB.ScoreTable.TABLE_NAME, null, sc);
-
     }
 
     @Override

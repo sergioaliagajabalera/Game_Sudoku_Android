@@ -203,7 +203,6 @@ public class Game extends AppCompatActivity {
                     String visibleName = cursor.getString(1);
                     String color = cursor.getString(cursor.getColumnIndexOrThrow(CalendarContract.Calendars.CALENDAR_COLOR));
                     Boolean selected = !cursor.getString(3).equals("0");
-                    System.out.println("hola  " + visibleName);
                     calendars.add(visibleName);
                 }
             }
