@@ -1,5 +1,7 @@
 package edu.fje.aliaga_sergio_palma_perez_practica_android_m08uf1;
 
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -29,16 +31,17 @@ public class MainActivity extends AppCompatActivity {
     private ImageView logoimage;
     ScoreAdapter scoresAdapter;
 
-    private static final int PERMISSIONS_REQUEST_READ_CALENDARS = 100;
-    private static final int PERMISSIONS_REQUEST_WRITE_CALENDARS = 200;
+    final int callbackId = 42;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Calendar
+        checkPermission(callbackId, Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR);
         setContentView(R.layout.activity_main);
 
-        //Calendar
-        if (ContextCompat.checkSelfPermission(this,
+
+        /*if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_CALENDAR)
                 != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
@@ -59,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                         new String[]{Manifest.permission.WRITE_CALENDAR},
                         PERMISSIONS_REQUEST_WRITE_CALENDARS);
             }
-        }
+        }*/
 
         //Creation or access to database
         ScoreDBHelper scores = ScoreDBHelper.getInstance(this);
@@ -98,6 +101,17 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
+    }
+
+
+    private void checkPermission(int callbackId, String... permissionsId) {
+        boolean permissions = true;
+        for (String p : permissionsId) {
+            permissions = permissions && ContextCompat.checkSelfPermission(this, p) == PERMISSION_GRANTED;
+        }
+
+        if (!permissions)
+            ActivityCompat.requestPermissions(this, permissionsId, callbackId);
     }
 
     @Override
