@@ -19,6 +19,7 @@ public class ScoreDBHelper extends SQLiteOpenHelper {
     private static final String CREATE_SCORE_TABLE = "CREATE TABLE "
             + ScoreDB.ScoreTable.TABLE_NAME + " ("
             + ScoreDB.ScoreTable._ID + " INTEGER PRIMARY KEY,"
+            + ScoreDB.ScoreTable.GAME_DATE + " TEXT,"
             + ScoreDB.ScoreTable.TIME + " INTEGER,"
             + ScoreDB.ScoreTable.LEVEL + " INTEGER,"
             + ScoreDB.ScoreTable.POINTS + " INTEGER )";
@@ -59,6 +60,7 @@ public class ScoreDBHelper extends SQLiteOpenHelper {
         db.beginTransaction();
         try {
             ContentValues values = new ContentValues();
+            values.put(ScoreDB.ScoreTable.GAME_DATE, s.game_date);
             values.put(ScoreDB.ScoreTable.TIME, s.time);
             values.put(ScoreDB.ScoreTable.POINTS, s.points);
             values.put(ScoreDB.ScoreTable.LEVEL, s.level);

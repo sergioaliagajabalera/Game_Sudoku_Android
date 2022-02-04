@@ -7,6 +7,7 @@ public class ScoreDB {
 
     static abstract class ScoreTable implements BaseColumns {
         static final String TABLE_NAME = "score";
+        static final String GAME_DATE = "game_date";
         static final String TIME = "time";
         static final String POINTS = "points";
         static final String LEVEL = "level";
